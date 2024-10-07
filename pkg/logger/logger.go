@@ -31,9 +31,9 @@ func (dl *DefaultLogger) Setup(rv runtimevars.IRV) error {
 		return err
 	}
 	// check rv
-	if rv == nil {
-		rv.Load()
-	}
+	// if rv == nil {
+	// 	rv.Load()
+	// }
 
 	//setup Logger
 	dl.Logg = logrus.New()
@@ -76,6 +76,7 @@ func (dl *DefaultLogger) SetLogrous(lvl string) error {
 		return err
 	}
 	dl.Logg.SetLevel(logLvl)
+	return nil
 }
 
 // Structured Logger is simple and powerfull implementation of a custom structed
@@ -148,4 +149,16 @@ func GetLogEntry(r *http.Request) logrus.FieldLogger {
 		return entry.(*StructuredLoggerEntry).Logger
 	}
 	return StructuredLoggerEntry{Logger: logrus.NewEntry(logrus.StandardLogger())}.Logger
+}
+
+func LogEntrySetField(r *http.Request, key string, value interface{}) {
+	if entry, ok := r.Context().Value(middleware.LogEntryCtxKey).(*StructuredLoggerEntry); ok {
+		entry.Logger = entry.Logger.WithField(key, value)
+	}
+}
+
+func LogEntrySetFields(r *http.Request, fields map[string]interface{}) {
+	if entry, ok := r.Context().Value(middleware.LogEntryCtxKey).(*StructuredLoggerEntry); ok {
+		entry.Logger = entry.Logger.WithFields(fields)
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/BlockChain-Passion/go-project/pkg/logger"
 	"github.com/lpernett/godotenv"
 )
 
